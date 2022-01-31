@@ -1,0 +1,22 @@
+{
+    "tokenId": 1,
+    "name": "Block Banana #1",
+    "image": "https://gateway.pinata.cloud/ipfs/QmeB95KiZrNBfv2uu3QdNAPfVT2DZopYBWCqaGwDsjWRBQ",
+    "description": "Official business card of Zoe, a digital artist making digital shit for a living.\nLook into the smart contract for more information.",
+    "attributes": [{
+        "trait_type": "Name",
+        "value": "Zoe"
+    }, {
+        "trait_type": "Title",
+        "value": "Game Designer"
+    }, {
+        "trait_type": "Twitter",
+        "value": "@Zoeyeeyeeyee"
+    }, {
+        "trait_type": "DNA",
+        "value": "Dog"
+    }, {
+        "trait_type": "Lover",
+        "value": "Elon Musk"
+    }]
+}
