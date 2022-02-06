@@ -29,14 +29,14 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	uint256 public totalSupply = 0;
 	bool public hasSaleStarted = true; //
 	bool public whitelistSwitch = true;
-	address public treasury = 0x953C08e703978D00D992c920FE9104A4375De893; //
+	address public treasury = 0x5279246E3626Cebe71a4c181382A50a71d2A4156; //
 
 	mapping (address => uint256) public hasMint;
 	mapping (uint256 => address[]) public idHolder;
 
 	// Constructor
 	// ------------------------------------------------------------------------
-	constructor()ERC1155("https://gateway.pinata.cloud/ipfs/QmY6dhMrX7j9mUgRbzFxJff5bUpWjevifWjcprLuuwczpd")
+	constructor()ERC1155("https://gateway.pinata.cloud/ipfs/Qmak7SQmUrh9ujcBLu6DdJwYU7Wtyp1gx67iuHFR4woJ7o")
 	EIP712("Block Banana", "1.0.0"){} 
 	
 	function name() public view virtual returns (string memory) {
@@ -90,6 +90,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// ------------------------------------------------------------------------
 	function giveaway(address to, uint256 quantity) external onlyOwner{
 		require(totalSupply.add(quantity) <= MAX_TOKEN, "Exceeds MAX_TOKEN.");
+		require(quantity > 0 && hasMint[to].add(quantity) <= 2, "Exceeds max quantity.");
 
 		_mint(to, 1, quantity, "");
 
