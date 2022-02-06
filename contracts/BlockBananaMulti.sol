@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 // | _ \| |/ _ \/ _|| / /   | _ \/ _` || ' \ / _` || ' \ / _` |
 // |___/|_|\___/\__||_\_\   |___/\__,_||_||_|\__,_||_||_|\__,_|
 
-contract BlockBanana is Ownable, EIP712, ERC1155{
+contract BlockBananaMulti is Ownable, EIP712, ERC1155{
 
 	using SafeMath for uint256;
 	using Strings for uint256;
@@ -24,19 +24,23 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	string private _name = "BB";
 	string private _symbol = "BB";
 	uint256 public MAX_TOKEN = 10000;
-	uint256 public PRICE = 0.2 ether;
+	uint256 public PRICE_1 = 10 ether;
+	uint256 public PRICE_2 = 5 ether;
+	uint256 public PRICE_3 = 1 ether;
+	uint256 public PRICE_4 = 0.5 ether;
 	uint256 public saleTimestamp = 1642410000; // 
 	uint256 public totalSupply = 0;
 	bool public hasSaleStarted = true; //
 	bool public whitelistSwitch = true;
-	address public treasury = 0x953C08e703978D00D992c920FE9104A4375De893; //
+	address public treasury = 0xd56e7bcF62a417b821e6cf7ee16dF7715a3e82AB; //
 
 	mapping (address => uint256) public hasMint;
+	mapping (uint256 => uint256) public idQuantity;
 	mapping (uint256 => address[]) public idHolder;
 
 	// Constructor
 	// ------------------------------------------------------------------------
-	constructor()ERC1155("https://gateway.pinata.cloud/ipfs/QmY6dhMrX7j9mUgRbzFxJff5bUpWjevifWjcprLuuwczpd")
+	constructor()ERC1155("https://blockbanana.com/metadata/{id}")
 	EIP712("Block Banana", "1.0.0"){} 
 	
 	function name() public view virtual returns (string memory) {
@@ -49,7 +53,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 
 	// Events
 	// ------------------------------------------------------------------------
-	event mintEvent(address owner, uint256 quantity, uint256 totalSupply);
+	event mintEvent(address owner, uint256 id, uint256 quantity, uint256 totalSupply);
 
 	// Modifiers
 	// ------------------------------------------------------------------------
@@ -69,41 +73,63 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 
 	// Mint functions
 	// ------------------------------------------------------------------------
-	function mintNFT(uint256 quantity, uint256 maxQuantity, bytes memory SIGNATURE) external payable onlySale{
+	function mintNFT(uint256 id, uint256 quantity, uint256 maxQuantity, bytes memory SIGNATURE) external payable onlySale{
 		if (whitelistSwitch == true){
 			require(verify(maxQuantity, SIGNATURE), "Not eligible for whitelist.");
 		}
 		require(totalSupply.add(quantity) <= MAX_TOKEN, "Exceeds MAX_TOKEN.");
 		require(quantity > 0 && hasMint[msg.sender].add(quantity) <= 2, "Exceeds max quantity.");
-		require(msg.value == PRICE.mul(quantity), "Ether value sent is not equal the price.");
+		require(id > 0 && id <= 4, "None token id.");
+		
+		if (id == 1){
+			require(msg.value == PRICE_1.mul(quantity), "Ether value sent is not equal the price.");
+			idHolder[1].push(msg.sender);
+			idQuantity[1] = idQuantity[1].add(quantity);
 
-		_mint(msg.sender, 1, quantity, "");
+		} else if (id == 2){
+			require(msg.value == PRICE_2.mul(quantity), "Ether value sent is not equal the price.");
+			idHolder[2].push(msg.sender);
+			idQuantity[2] = idQuantity[2].add(quantity);
+
+		} else if (id == 3){
+			require(msg.value == PRICE_3.mul(quantity), "Ether value sent is not equal the price.");
+			idHolder[3].push(msg.sender);
+			idQuantity[3] = idQuantity[3].add(quantity);
+
+		} else if (id == 4){
+			require(msg.value == PRICE_4.mul(quantity), "Ether value sent is not equal the price.");
+			idHolder[4].push(msg.sender);
+			idQuantity[4] = idQuantity[4].add(quantity);
+
+		}
+		
+		_mint(msg.sender, id, quantity, "");
 		
 		hasMint[msg.sender] = hasMint[msg.sender].add(quantity);
-		idHolder[1].push(msg.sender);
 		totalSupply = totalSupply.add(quantity);
 
-		emit mintEvent(msg.sender, quantity, totalSupply);
+		emit mintEvent(msg.sender, id, quantity, totalSupply);
 	}
 
 	// Giveaway functions
 	// ------------------------------------------------------------------------
-	function giveaway(address to, uint256 quantity) external onlyOwner{
+	function giveaway(address to, uint256 token_id, uint256 quantity) external onlyOwner{
 		require(totalSupply.add(quantity) <= MAX_TOKEN, "Exceeds MAX_TOKEN.");
 
-		_mint(to, 1, quantity, "");
+		_mint(to, token_id, quantity, "");
 
 		hasMint[to] = hasMint[to].add(quantity);
 		totalSupply = totalSupply.add(quantity);
-		idHolder[1].push(to);
+		idHolder[token_id].push(to);
+		idQuantity[token_id] = idQuantity[token_id].add(quantity);
 
-		emit mintEvent(to, quantity, totalSupply);
+		emit mintEvent(to, token_id, quantity, totalSupply);
 	}
 
 	// Burn functions
 	// ------------------------------------------------------------------------
-	function burn(address to, uint256 quantity) external onlyOwner {
-		_burn(to, 1, quantity);
+	function burn(address to, uint256 burn_id, uint256 quantity) external onlyOwner {
+		_burn(to, burn_id, quantity);
 	}
 
     // Query address list of token id.
@@ -111,6 +137,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
         uint256 addressCount = idHolder[id].length;
         
         if (addressCount == 0) {
+            // Return an empty array
             return new address[](0);
         } else {
             address[] memory result = new address[](addressCount);
@@ -128,15 +155,23 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 		MAX_TOKEN = _MAX_TOKEN;
 	}
 
-	function set_PRICE(uint256 _price) external onlyOwner {
-		PRICE = _price;
+	function set_PRICE(uint256 token_id, uint256 _price) external onlyOwner {
+		if (token_id == 1){
+			PRICE_1 = _price;
+		} else if (token_id == 2){
+			PRICE_2 = _price;
+		} else if (token_id == 3){
+			PRICE_3 = _price;
+		} else if (token_id == 4){
+			PRICE_4 = _price;
+		}
 	}
 
 	function setBaseURI(string memory baseURI) public onlyOwner {
 		_setURI(baseURI);
 	}
 
-    function setSaleTime(bool _hasSaleStarted, uint256 _saleTimestamp, bool _whitelistSwitch) external onlyOwner {
+    function setSaleTime(bool _hasSaleStarted,uint256 _saleTimestamp, bool _whitelistSwitch) external onlyOwner {
         hasSaleStarted = _hasSaleStarted;
         saleTimestamp = _saleTimestamp;
 		whitelistSwitch = _whitelistSwitch;

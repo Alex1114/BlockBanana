@@ -38,7 +38,7 @@ describe("BlockBanana", function () {
 
 		it("giveaway Function", async function () {
 
-			await contract.connect(owner).giveaway(addr2.address, 2, 1);
+			await contract.connect(owner).giveaway(addr2.address, 1);
 			expect(await contract.totalSupply()).to.equal(1);
 
 		});
@@ -47,7 +47,6 @@ describe("BlockBanana", function () {
 
 			let quantity = 2;
 			let maxQuantity = 2;
-			let id = 4
 
 			const domain = {
 				name: 'Block Banana',
@@ -75,7 +74,7 @@ describe("BlockBanana", function () {
 
 			signature = await owner._signTypedData(domain, types, value);
 			console.log(signature)
-			await contract.connect(addr1).mintNFT(id, quantity, maxQuantity, signature, {value: "1000000000000000000"});
+			await contract.connect(addr1).mintNFT(quantity, maxQuantity, signature, {value: "400000000000000000"});
 
 		});
 

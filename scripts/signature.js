@@ -8,18 +8,18 @@ var adminClient = new faunadb.Client({
 
 async function main() {
 
-	let nftAddress = "0x1B16A386A7822ddBc88aBd21eC05EC99285Ac4d1"; //
+	let nftAddress = "0x0B23118668235C07022271964c3Fbd8D8A16b30B"; //
 	let owner = new ethers.Wallet(process.env.RINKEBY_PRIVATE_KEY); //
 	let serial = 0;
 	let maxQuantity = 2;
-	let addressForClaim = ['0xdc41cde0eb46fd1a75040bcdd8ed8df045e28c20'];
+	let addressForClaim = ['0xbd42a2035d41b450ee7106c9f9c0c736fb546226', '0xd56e7bcf62a417b821e6cf7ee16df7715a3e82ab'];
 
 
 	for (let i = 0; i < addressForClaim.length; i++) {
 		const domain = {
 			name: 'Block Banana',
 			version: '1.0.0',
-			chainId: 1,
+			chainId: 4, //
 			verifyingContract: nftAddress
 		};
 

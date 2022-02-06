@@ -10,7 +10,7 @@ const NFT = artifacts.require("BlockBanana");
 async function main() {
 
 
-  let nftAddress = "0x1B16A386A7822ddBc88aBd21eC05EC99285Ac4d1";//
+  let nftAddress = "0x0B23118668235C07022271964c3Fbd8D8A16b30B";//
   let nft = await NFT.at(nftAddress);
 
   await nft.withdrawAll();
