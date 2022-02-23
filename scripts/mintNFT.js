@@ -9,7 +9,7 @@ const NFT = artifacts.require("BlockBanana");
 
 async function main() {
 
-  let nftAddress = "0x0B23118668235C07022271964c3Fbd8D8A16b30B";
+  let nftAddress = "0x6EAD42Eb0b82b44E090450D907418Ee59915C7e2";
   let nft = await NFT.at(nftAddress);
   // let chainId = await ethers.provider.getNetwork()
   let owner = new ethers.Wallet(process.env.RINKEBY_PRIVATE_KEY);

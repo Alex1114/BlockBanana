@@ -24,6 +24,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	string private _name = "BB";
 	string private _symbol = "BB";
 	uint256 public MAX_TOKEN = 10000;
+	uint256 public HOLDER_MAX = 2;
 	uint256 public PRICE = 0.2 ether;
 	uint256 public saleTimestamp = 1642410000; // 
 	uint256 public totalSupply = 0;
@@ -74,7 +75,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 			require(verify(maxQuantity, SIGNATURE), "Not eligible for whitelist.");
 		}
 		require(totalSupply.add(quantity) <= MAX_TOKEN, "Exceeds MAX_TOKEN.");
-		require(quantity > 0 && hasMint[msg.sender].add(quantity) <= 2, "Exceeds max quantity.");
+		require(quantity > 0 && hasMint[msg.sender].add(quantity) <= HOLDER_MAX, "Exceeds max quantity.");
 		require(msg.value == PRICE.mul(quantity), "Ether value sent is not equal the price.");
 
 		_mint(msg.sender, 1, quantity, "");
@@ -90,7 +91,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// ------------------------------------------------------------------------
 	function giveaway(address to, uint256 quantity) external onlyOwner{
 		require(totalSupply.add(quantity) <= MAX_TOKEN, "Exceeds MAX_TOKEN.");
-		require(quantity > 0 && hasMint[to].add(quantity) <= 2, "Exceeds max quantity.");
+		require(quantity > 0 && hasMint[to].add(quantity) <= HOLDER_MAX, "Exceeds max quantity.");
 
 		_mint(to, 1, quantity, "");
 
@@ -105,6 +106,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// ------------------------------------------------------------------------
 	function burn(address to, uint256 quantity) external onlyOwner {
 		_burn(to, 1, quantity);
+		hasMint[to] = hasMint[to].sub(quantity);
 	}
 
     // Query address list of token id.
@@ -127,6 +129,10 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// ------------------------------------------------------------------------
 	function setMAX_TOKEN(uint _MAX_TOKEN) external onlyOwner {
 		MAX_TOKEN = _MAX_TOKEN;
+	}
+
+	function setHOLDER_MAX(uint _HOLDER_MAX) external onlyOwner {
+		HOLDER_MAX = _HOLDER_MAX;
 	}
 
 	function set_PRICE(uint256 _price) external onlyOwner {
