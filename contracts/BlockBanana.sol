@@ -21,8 +21,8 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// Variables
 	// ------------------------------------------------------------------------
 	// string private _name = "Block Banana";
-	string private _name = "BB";
-	string private _symbol = "BB";
+	string private _name = "BB"; //
+	string private _symbol = "BB"; //
 	uint256 public MAX_TOKEN = 10000;
 	uint256 public HOLDER_MAX = 2;
 	uint256 public PRICE = 0.2 ether;
@@ -33,7 +33,6 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	address public treasury = 0x5279246E3626Cebe71a4c181382A50a71d2A4156; //
 
 	mapping (address => uint256) public hasMint;
-	mapping (uint256 => address[]) public idHolder;
 
 	// Constructor
 	// ------------------------------------------------------------------------
@@ -81,7 +80,6 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 		_mint(msg.sender, 1, quantity, "");
 		
 		hasMint[msg.sender] = hasMint[msg.sender].add(quantity);
-		idHolder[1].push(msg.sender);
 		totalSupply = totalSupply.add(quantity);
 
 		emit mintEvent(msg.sender, quantity, totalSupply);
@@ -97,7 +95,6 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 
 		hasMint[to] = hasMint[to].add(quantity);
 		totalSupply = totalSupply.add(quantity);
-		idHolder[1].push(to);
 
 		emit mintEvent(to, quantity, totalSupply);
 	}
@@ -109,29 +106,10 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 		hasMint[to] = hasMint[to].sub(quantity);
 	}
 
-    // Query address list of token id.
-    function ownerOfToken(uint256 id) external view returns(address[] memory ) {
-        uint256 addressCount = idHolder[id].length;
-        
-        if (addressCount == 0) {
-            return new address[](0);
-        } else {
-            address[] memory result = new address[](addressCount);
-            uint256 index;
-            for (index = 0; index < addressCount; index++) {
-                result[index] = idHolder[id][index];
-            }
-            return result;
-        }
-    }
-
 	// setting functions
 	// ------------------------------------------------------------------------
-	function setMAX_TOKEN(uint _MAX_TOKEN) external onlyOwner {
+	function setMAX_TOKEN(uint256 _MAX_TOKEN, uint256 _HOLDER_MAX) external onlyOwner {
 		MAX_TOKEN = _MAX_TOKEN;
-	}
-
-	function setHOLDER_MAX(uint _HOLDER_MAX) external onlyOwner {
 		HOLDER_MAX = _HOLDER_MAX;
 	}
 

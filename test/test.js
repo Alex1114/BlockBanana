@@ -36,16 +36,22 @@ describe("BlockBanana", function () {
 
 	describe("BlockBanana Test", function () {
 
-		it("giveaway Function", async function () {
+		// it("giveaway Function", async function () {
+		// 	await contract.connect(owner).setMAX_TOKEN(20000, 2);
 
-			await contract.connect(owner).giveaway(addr2.address, 1);
-			expect(await contract.totalSupply()).to.equal(1);
+		// 	for (i = 0; i < 2; i++){
+		// 		await contract.connect(owner).giveaway(addr2.address, 10000);
+		// 	}
+			
+		// 	expect(await contract.totalSupply()).to.equal(20000);
 
-		});
+		// });
 
 		it("mintNFT Function", async function () {
 
-			let quantity = 2;
+			await contract.connect(owner).setMAX_TOKEN(20000, 10);
+
+			let quantity = 1;
 			let maxQuantity = 2;
 
 			const domain = {
@@ -74,7 +80,7 @@ describe("BlockBanana", function () {
 
 			signature = await owner._signTypedData(domain, types, value);
 			console.log(signature)
-			await contract.connect(addr1).mintNFT(quantity, maxQuantity, signature, {value: "400000000000000000"});
+			await contract.connect(addr1).mintNFT(quantity, maxQuantity, signature, {value: "200000000000000000"});
 
 		});
 
