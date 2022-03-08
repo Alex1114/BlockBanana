@@ -30,7 +30,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	uint256 public totalSupply = 0;
 	bool public hasSaleStarted = true; //
 	bool public whitelistSwitch = true;
-	bool public burnSwitch = false;
+	bool public burnStarted = false;
 	address public treasury = 0x5279246E3626Cebe71a4c181382A50a71d2A4156; //
 
 	mapping (address => uint256) public hasMint;
@@ -103,7 +103,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// Burn functions
 	// ------------------------------------------------------------------------
     function burn(address account, uint256 quantity) public virtual {
-        require(burnSwitch == true, "Burn hasn't started.");
+        require(burnStarted == true, "Burn hasn't started.");
         require(account == _msgSender() || isApprovedForAll(account, _msgSender()), "Caller is not owner nor approved.");
 
         _burn(account, 1, quantity);
@@ -130,8 +130,8 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 		whitelistSwitch = _whitelistSwitch;
     }
 
-    function setBurn(bool _burnSwitch) external onlyOwner {
-        burnSwitch = _burnSwitch;
+    function setBurn(bool _burnStarted) external onlyOwner {
+        burnStarted = _burnStarted;
     }
 
 	// Withdrawal functions
