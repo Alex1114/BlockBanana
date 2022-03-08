@@ -93,7 +93,7 @@ describe("BlockBanana", function () {
 		it("burn Function", async function () {
 
 			await contract.connect(owner).setBurn(1);
-			await contract.connect(addr2).burn(addr1.address, 2);
+			await contract.connect(addr1).burn(addr1.address, 2);
 		});
 	});
 });
