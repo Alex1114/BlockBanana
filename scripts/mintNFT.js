@@ -9,11 +9,11 @@ const NFT = artifacts.require("BlockBanana");
 
 async function main() {
 
-  let nftAddress = "0x6EAD42Eb0b82b44E090450D907418Ee59915C7e2";
+  let nftAddress = "0xD95e8028c20B6CbfCf8bC0Cc78647f94DE470cCD";
   let nft = await NFT.at(nftAddress);
   // let chainId = await ethers.provider.getNetwork()
   let owner = new ethers.Wallet(process.env.RINKEBY_PRIVATE_KEY);
-  let quantity = 1;
+  let quantity = 2;
   let maxQuantity = 2;
 
   const domain = {
@@ -35,7 +35,7 @@ async function main() {
   signature = await owner._signTypedData(domain, types, value);
   console.log(signature);
 
-  await nft.mintNFT(quantity, maxQuantity, signature, {value: "1000000000000000000"});
+  await nft.mintNFT(quantity, maxQuantity, signature, {value: "400000000000000000"});
 }
 
 
