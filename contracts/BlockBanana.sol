@@ -22,9 +22,9 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// ------------------------------------------------------------------------
 	// string private _name = "Block Banana";
 	string private _name = "BB"; //
-	string private _symbol = "BB"; //
+	string private _symbol = "BB";
 	uint256 public MAX_TOKEN = 10000;
-	uint256 public HOLDER_MAX = 2;
+	uint256 public HOLDER_MAX = 3;
 	uint256 public PRICE = 0.2 ether;
 	uint256 public saleTimestamp = 1642410000; // 
 	uint256 public totalSupply = 0;
@@ -37,7 +37,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 
 	// Constructor
 	// ------------------------------------------------------------------------
-	constructor()ERC1155("https://gateway.pinata.cloud/ipfs/Qmak7SQmUrh9ujcBLu6DdJwYU7Wtyp1gx67iuHFR4woJ7o")
+	constructor()ERC1155("https://gateway.pinata.cloud/ipfs/QmPCYHeALfvvezCBP2FfDrqyJvm59tMdmcfHTyYCz2XdG5")
 	EIP712("Block Banana", "1.0.0"){} 
 	
 	function name() public view virtual returns (string memory) {
@@ -51,6 +51,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// Events
 	// ------------------------------------------------------------------------
 	event mintEvent(address owner, uint256 quantity, uint256 totalSupply);
+	event burnEvent(address account, uint256 quantity);
 
 	// Modifiers
 	// ------------------------------------------------------------------------
@@ -107,6 +108,8 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
         require(account == tx.origin || isApprovedForAll(account, _msgSender()), "Caller is not owner nor approved.");
 
         _burn(account, 1, quantity);
+
+		emit burnEvent(account, quantity);	
     }
 
 	// setting functions

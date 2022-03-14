@@ -37,13 +37,13 @@ describe("BlockBanana", function () {
 	describe("BlockBanana Test", function () {
 
 		// it("giveaway Function", async function () {
-		// 	await contract.connect(owner).setMAX_TOKEN(20000, 2);
+		// 	await contract.connect(owner).setMAX_TOKEN(10000, 10000);
 
-		// 	for (i = 0; i < 2; i++){
-		// 		await contract.connect(owner).giveaway(addr2.address, 10000);
+		// 	for (i = 0; i < 100; i++){
+		// 		await contract.connect(owner).giveaway(addr2.address, 100);
 		// 	}
 			
-		// 	expect(await contract.totalSupply()).to.equal(20000);
+		// 	expect(await contract.totalSupply()).to.equal(10000);
 
 		// });
 
@@ -51,8 +51,8 @@ describe("BlockBanana", function () {
 
 			// await contract.connect(owner).setMAX_TOKEN(20000, 10);
 
-			let quantity = 2;
-			let maxQuantity = 2;
+			let quantity = 3;
+			let maxQuantity = 3;
 
 			const domain = {
 				name: 'Block Banana',
@@ -75,12 +75,12 @@ describe("BlockBanana", function () {
 
 			const value = {
 				addressForClaim: addr1.address,
-				maxQuantity: 2
+				maxQuantity: 3
 			};
 
 			signature = await owner._signTypedData(domain, types, value);
 			console.log(signature)
-			await contract.connect(addr1).mintNFT(quantity, maxQuantity, signature, {value: "400000000000000000"});
+			await contract.connect(addr1).mintNFT(quantity, maxQuantity, signature, {value: "600000000000000000"});
 
 		});
 
@@ -90,10 +90,10 @@ describe("BlockBanana", function () {
 
 		});
 
-		it("burn Function", async function () {
+		// it("burn Function", async function () {
 
-			await contract.connect(owner).setBurn(1);
-			await contract.connect(addr1).burn(addr1.address, 2);
-		});
+		// 	await contract.connect(owner).setBurn(1);
+		// 	await contract.connect(addr1).burn(addr1.address, 2);
+		// });
 	});
 });
