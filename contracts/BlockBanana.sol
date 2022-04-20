@@ -140,7 +140,7 @@ contract BlockBanana is Ownable, EIP712, ERC1155{
 	// Withdrawal functions
 	// ------------------------------------------------------------------------
     function setTreasury(address _treasury) external onlyOwner {
-        require(treasury != address(0), "SETTING_ZERO_ADDRESS");
+        require(_treasury != address(0), "SETTING_ZERO_ADDRESS");
         treasury = _treasury;
     }
 
